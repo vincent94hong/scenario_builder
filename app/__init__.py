@@ -39,6 +39,12 @@ def create_app(config=None):
     migrate.init_app(app, db)
 
 
+    '''Restx INIT'''
+    from app.apis import bp as api
+    app.register_blueprint(api)    
+    csrf.exempt(api)
+
+
     '''Routes'''
     from app.routes import home_route, auth_route # project_route
     app.register_blueprint(home_route.bp)

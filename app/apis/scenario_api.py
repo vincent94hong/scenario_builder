@@ -10,21 +10,21 @@ ns = Namespace(
 )
 
 
-character = ns.model('Character', {
-    'name' : fields.String(required=True, description='캐릭터 이름'),
-    'content' : fields.String(required=True, description='캐릭터 설명'),
-})
+# character = ns.model('Character', {
+#     'name': fields.String(required=True, description='캐릭터 이름'),
+#     'content': fields.String(required=True, description='캐릭터 설명'),
+# })
 
 
 scenario = ns.model('Scenario', {
-    'idx' : fields.Integer(required=True, description='시나리오 고유 인덱스'),
-    'title' : fields.String(required=True, description='시나리오 제목'),
-    'content' : fields.String(required=True, description='시나리오 설명'),
-    'characters' : fields.List(fields.Nested(character), description='연결된 캐릭터들'),
+    'idx': fields.Integer(required=True, description='시나리오 고유 인덱스'),
+    'title': fields.String(required=True, description='시나리오 제목'),
+    'content': fields.String(required=True, description='시나리오 설명'),
+    # 'characters': fields.List(fields.Nested(character), description='연결된 캐릭터들'),
 
-    'created_at' : fields.DateTime(description='생성일'),
-    'updated_at' : fields.DateTime(description='수정일'),
-    'is_deleted' : fields.Boolean(description='삭제 여부'),
+    'created_at': fields.DateTime(description='생성일'),
+    'updated_at': fields.DateTime(description='수정일'),
+    'is_deleted': fields.Boolean(description='삭제 여부'),
 })
 
 

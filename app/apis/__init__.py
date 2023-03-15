@@ -3,15 +3,16 @@ from flask_restx import Api
 from functools import wraps
 
 from .character_api import ns as CharacterNamespace
+from .scenario_api import ns as ScenarioNamespace
 
 
-def check_session(func):
-    @wraps(func)
-    def __wrapper(*args, **kwargs):
-        if not g.user:
-            abort(401)
-        return func(*args, **kwargs)
-    return __wrapper
+# def check_session(func):
+#     @wraps(func)
+#     def __wrapper(*args, **kwargs):
+#         if not g.user:
+#             abort(401)
+#         return func(*args, **kwargs)
+#     return __wrapper
 
 
 bp = Blueprint(
@@ -22,12 +23,13 @@ bp = Blueprint(
 
 api = Api(
     bp,
-    title='Scenario Builder',
+    title='Scenario Builder API',
     version='1.0',
     doc='/docs',
-    decorators=[check_session],
+    # decorators=[check_session],
     description='Welcome Scenario Builder API'
 )
 
 
 api.add_namespace(CharacterNamespace)
+api.add_namespace(ScenarioNamespace)

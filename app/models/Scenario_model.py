@@ -4,9 +4,9 @@ from sqlalchemy import func
 
 class Scenario(db.Model):
     idx = db.Column(db.Integer, primary_key=True)
-    user_idx = db.Column(db.String(20), db.ForeignKey('user.idx', ondelete='CASCADE'))
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'))
     title = db.Column(db.String(100), nullable=False, unique=True)
-    content = db.Column(db.String(1000))
+    content = db.Column(db.String(500))
     characters = db.relationship('Character', backref=db.backref('scenarios'))
     # episodes = db.relationship('Episode', backref=db.backref('scenarios'))
 
@@ -16,5 +16,5 @@ class Scenario(db.Model):
 
 
     @classmethod
-    def find_one_by_scenario_title(cls, scenario_title, search_idx=False):
+    def find_one_by_scenario_title(cls, scenario_title):
         return Scenario.query.filter_by(title=scenario_title).first()
