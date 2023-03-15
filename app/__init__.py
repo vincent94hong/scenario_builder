@@ -40,10 +40,10 @@ def create_app(config=None):
 
 
     '''Routes'''
-    from app.routes import home_route, auth_route, project_route
+    from app.routes import home_route, auth_route # project_route
     app.register_blueprint(home_route.bp)
     app.register_blueprint(auth_route.bp)
-    app.register_blueprint(project_route.bp)
+    # app.register_blueprint(project_route.bp)
 
 
     '''Request hook'''

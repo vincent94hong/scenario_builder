@@ -1,5 +1,5 @@
 from app import db
-from app.models.Scenario_model import Scenario
+from app.models.scenario_model import Scenario
 from sqlalchemy import func
 
 
