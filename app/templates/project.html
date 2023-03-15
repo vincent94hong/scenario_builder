@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>character</title>
+</head>
+<body>
+    <h1>character</h1>
+    <form method="POST" action="{{ url_for('my_scenario.character') }}">
+        {{ form.csrf_token }}
+        {{ form.character_name.label }} {{ form.character_name(minlength=1, maxlength=100) }}
+        {{ form.old.label }} {{ form.old(maxlength=10) }}
+        {{ form.character1.label }} {{ form.character1(maxlength=1000) }}
+        {{ form.errors }}
+        <input type="submit" value="Go">
+    </form>
+
+    <form method="POST" action="{{ url_for('my_scenario.item') }}">
+        {{ form.csrf_token }}
+        {{ form.item_name.label }} {{ form.item_name(minlength=1, maxlength=100) }}
+        {{ form.item_effect.label }} {{ form.item_effect(maxlength=1000) }}
+        {{ form.errors }}
+        <input type="submit" value="Go">
+    </form>
+
+    <form method="POST" action="{{ url_for('my_scenario.main_story') }}">
+        {{ form.csrf_token }}
+        {{ form.episode_number.label }} {{ form.episode_number(maxlength=100) }}
+        {{ form.episode_name.label }} {{ form.episode_name(minlength=1, maxlength=100) }}
+        {{ form.episode_content.label }} {{ form.episode_content(maxlength=10000) }}
+        {{ form.errors }}
+        <input type="submit" value="Go">
+    </form>
+</body>
+</html>

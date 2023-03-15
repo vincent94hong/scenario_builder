@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>sign_up</title>
 </head>
 <body>
-    <h1>login</h1>
-    <form method="POST" action="{{ url_for('auth.login') }}">
+    <h1>sign up</h1>
+    <form method="POST" action="{{ url_for('auth.sign_up') }}">
         {{ form.csrf_token }}
         {{ form.user_id.label }} {{ form.user_id(minlength=4, maxlength=20) }}
+        {{ form.user_name.label }} {{ form.user_name(minlength=4, maxlength=20) }}
+        {{ form.user_email.label }} {{ form.user_email(maxlength=50) }}
+        {{ form.user_phone.label }} {{ form.user_phone(minlength=11, maxlength=13) }}
         {{ form.user_pw.label }} {{ form.user_pw(maxlength=20) }}
+        {{ form.user_re_pw.label }} {{ form.user_re_pw(maxlength=20) }}
         {{ form.errors }}
         <input type="submit" value="Go">
     </form>

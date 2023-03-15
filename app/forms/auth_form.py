@@ -8,8 +8,10 @@ class LoginForm(FlaskForm):
     user_pw = PasswordField('User Password', validators=[DataRequired()])
 
 
-class RegisterForm(LoginForm):
+class SignUpForm(LoginForm):
     user_name = StringField('User Name', validators=[DataRequired()])
+    user_email = StringField('User Email')
+    user_phone = StringField('User Phone number')
     user_pw = PasswordField(
         'User Password', 
         validators=[DataRequired(), EqualTo(

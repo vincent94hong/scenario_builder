@@ -1,7 +1,10 @@
-from flask import Flask
+from flask import Flask, g
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
+
+
 
 csrf = CSRFProtect()
 db = SQLAlchemy()
@@ -12,7 +15,7 @@ def create_app(config=None):
     app = Flask(__name__)
 
 
-    '''configuration'''
+    '''Configuration'''
     from .configs import DevelopmentConfig, ProductionConfig
     if not config:
         if app.config['DEBUG']:
@@ -21,6 +24,10 @@ def create_app(config=None):
             config = ProductionConfig()
     print('run with:', config)
     app.config.from_object(config)
+
+
+    '''jwt tocken'''
+    jwt = JWTManager(app)
 
 
     '''CSRFProtect'''
@@ -32,11 +39,22 @@ def create_app(config=None):
     migrate.init_app(app, db)
 
 
-    '''routes'''
-    from app.routes import home_route, auth_route, my_scenario_route
+    '''Routes'''
+    from app.routes import home_route, auth_route, project_route
     app.register_blueprint(home_route.bp)
     app.register_blueprint(auth_route.bp)
-    app.register_blueprint(my_scenario_route.bp)
+    app.register_blueprint(project_route.bp)
+
+
+    '''Request hook'''
+    @app.before_request
+    def before_request():
+        g.db = db.session    
+
+    @app.teardown_request
+    def teardown_request(exception):
+        if hasattr(g, 'db'):
+            g.db.close()
 
 
     return app
