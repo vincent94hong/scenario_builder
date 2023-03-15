@@ -39,7 +39,7 @@ class Character(db.Model):
         return contents
 
     @classmethod
-    def find_characters_by_scenario_title(cls, scenario_title, is_opened=True, only_name=False): 
+    def find_characters_by_scenario_title(cls, scenario_title, only_name=False, is_opened=True): 
         '''
         is_opened = (True=default / False) : (공개된 / 공개되지 않은) 등장인물의,
         only_name = (True / False=default) : 등장인물 모델 (name, content만 dict 형태로 / 전부를) return.
@@ -89,7 +89,7 @@ class Element(db.Model):
     
     
     @classmethod
-    def find_elements_by_character_name(cls, char_name, is_opened=True, only_name=False):
+    def find_elements_by_character_name(cls, char_name, only_name=False, is_opened=True):
         '''
         is_opened = (True=default / False) : (공개된 / 공개되지 않은) 등장인물의,
         only_name = (True / False=default) : 등장인물 모델 (name, content만 dict 형태로 / 전부를) return.

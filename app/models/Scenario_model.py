@@ -8,7 +8,7 @@ class Scenario(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True)
     content = db.Column(db.String(1000))
     characters = db.relationship('Character', backref=db.backref('scenarios'))
-    episodes = db.relationship('Episode', backref=db.backref('scenarios'))
+    # episodes = db.relationship('Episode', backref=db.backref('scenarios'))
 
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.now())
