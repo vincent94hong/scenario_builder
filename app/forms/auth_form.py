@@ -4,19 +4,19 @@ from wtforms.validators import EqualTo, DataRequired
 
 
 class LoginForm(FlaskForm):
-    user_id = StringField('User Id', validators=[DataRequired()])
-    user_pw = PasswordField('User Password', validators=[DataRequired()])
+    id = StringField('User Id', validators=[DataRequired()])
+    pw = PasswordField('User Password', validators=[DataRequired()])
 
 
 class SignUpForm(LoginForm):
-    user_name = StringField('User Name', validators=[DataRequired()])
-    user_email = StringField('User Email')
-    user_phone = StringField('User Phone number')
-    user_pw = PasswordField(
+    name = StringField('User Name', validators=[DataRequired()])
+    email = StringField('User Email')
+    phone = StringField('User Phone number')
+    pw = PasswordField(
         'User Password', 
         validators=[DataRequired(), EqualTo(
-            'user_re_pw', 
+            're_pw', 
             message='Password must match'
         )]
     )
-    user_re_pw = PasswordField('Confirm Password', validators=[DataRequired()])
+    re_pw = PasswordField('Confirm Password', validators=[DataRequired()])

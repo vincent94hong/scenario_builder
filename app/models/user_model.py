@@ -12,5 +12,5 @@ class User(db.Model):
     created_at = db.Column(db.DateTime(), server_default=func.now())
 
     @classmethod
-    def find_one_by_user_id(cls, user_id):
-        return User.query.filter_by(id=user_id).first()
+    def find_one_by_user_id(cls, id):
+        return User.query.filter_by(id=id).first()

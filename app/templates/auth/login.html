@@ -7,11 +7,12 @@
     <title>login</title>
 </head>
 <body>
+
     <h1>login</h1>
     <form method="POST" action="{{ url_for('auth.login') }}">
         {{ form.csrf_token }}
-        {{ form.user_id.label }} {{ form.user_id(minlength=4, maxlength=20) }}
-        {{ form.user_pw.label }} {{ form.user_pw(maxlength=20) }}
+        {{ form.id.label }} {{ form.id(minlength=4, maxlength=20) }}
+        {{ form.pw.label }} {{ form.pw(maxlength=20) }}
         {{ form.errors }}
         <input type="submit" value="Go">
     </form>

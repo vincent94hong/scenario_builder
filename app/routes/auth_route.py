@@ -12,11 +12,11 @@ bp = Blueprint(NAME, __name__, url_prefix=f'/{NAME}')
 @bp.before_app_request
 def before_app_request():
     g.user = None
-    user_id = session.get('user_id')
-    if user_id:
-        user = UserModel.find_one_by_user_id(user_id)
+    id = session.get('user_id')
+    if id:
+        user = UserModel.find_one_by_user_id(id)
         if user:
-            g.user = user_id
+            g.user = user
         else:
             session.pop('user_id', None)
 
@@ -25,19 +25,20 @@ def before_app_request():
 def login():
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
-        user_id = form.data.get('user_id')
-        user_pw = form.data.get('user_pw')
-        user = UserModel.find_one_by_user_id(user_id)
+        id = form.data.get('id')
+        pw = form.data.get('pw')
+        user = UserModel.find_one_by_user_id(id)
         if user:
-            if security.check_password_hash(user.user_pw, user_pw):
-                session['user_id'] = user_id
-                return redirect(url_for('home.home'))
+            if not security.check_password_hash(user.pw, pw):
+                flash('비밀번호를 확인해주세요.')
             else:
-                return flash('not')
+                session['user_id'] = id
+                return redirect(url_for('home.home'))
         else:
-            return flash('not')
+            flash('존재하지 않는 회원입니다.')
+            return redirect(request.path)
     # else:
-    #     flash_form_error(form)
+    #     flash_form_errors(form)
 
     if g.user:
         return redirect(url_for('home.home'))
@@ -48,26 +49,26 @@ def login():
 def sign_up():
     form = SignUpForm()
     if request.method == 'POST' and form.validate_on_submit():
-        user_id = form.data.get('user_id')
-        user = UserModel.find_one_by_user_id(user_id)
+        id = form.data.get('id')
+        user = UserModel.find_one_by_user_id(id)
         if not user:
             g.db.add(
                 UserModel(
-                    user_id = user_id,
-                    user_name = form.data.get('user_name'),
-                    user_email = form.data.get('user_email'),
-                    user_phone = form.data.get('user_phone'),
-                    user_pw = security.generate_password_hash(form.data.get('user_pw'))
+                    id = id,
+                    name = form.data.get('name'),
+                    email = form.data.get('email'),
+                    phone = form.data.get('phone'),
+                    pw = security.generate_password_hash(form.data.get('pw'))
                 )
             )
             g.db.commit()
-            session['user_id'] = user_id
+            session['user_id'] = id
             return redirect(url_for('home.home'))
         else:
             flash('이미 존재하는 아이디입니다.')
             return redirect(request.path)
     # else:
-    #     flash_form_error(form)
+    #     flash_form_errors(form)
     return render_template(f'{NAME}/sign_up.html', form=form)
 
 
@@ -77,7 +78,7 @@ def logout():
     return redirect(url_for('home.home'))
 
 
-def flash_form_error(form):
+def flash_form_errors(form):
     for _, errors in form.errors.item():
         for e in errors:
             flash(e)

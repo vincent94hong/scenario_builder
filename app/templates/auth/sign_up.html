@@ -10,12 +10,12 @@
     <h1>sign up</h1>
     <form method="POST" action="{{ url_for('auth.sign_up') }}">
         {{ form.csrf_token }}
-        {{ form.user_id.label }} {{ form.user_id(minlength=4, maxlength=20) }}
-        {{ form.user_name.label }} {{ form.user_name(minlength=4, maxlength=20) }}
-        {{ form.user_email.label }} {{ form.user_email(maxlength=50) }}
-        {{ form.user_phone.label }} {{ form.user_phone(minlength=11, maxlength=13) }}
-        {{ form.user_pw.label }} {{ form.user_pw(maxlength=20) }}
-        {{ form.user_re_pw.label }} {{ form.user_re_pw(maxlength=20) }}
+        {{ form.id.label }} {{ form.id(minlength=4, maxlength=20) }}
+        {{ form.name.label }} {{ form.name(minlength=4, maxlength=20) }}
+        {{ form.email.label }} {{ form.email(maxlength=50) }}
+        {{ form.phone.label }} {{ form.phone(minlength=11, maxlength=13) }}
+        {{ form.pw.label }} {{ form.pw(maxlength=20) }}
+        {{ form.re_pw.label }} {{ form.re_pw(maxlength=20) }}
         {{ form.errors }}
         <input type="submit" value="Go">
     </form>
