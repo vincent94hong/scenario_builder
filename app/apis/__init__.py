@@ -2,6 +2,7 @@ from flask import Blueprint, g, abort
 from flask_restx import Api
 from functools import wraps
 
+from .admin_api import ns as AdminNamespace
 from .user_api import ns as UserNamespace
 from .character_api import ns as CharacterNamespace
 from .scenario_api import ns as ScenarioNamespace
@@ -21,6 +22,7 @@ bp = Blueprint(
     url_prefix='/api'
 )
 
+
 api = Api(
     bp,
     title='Scenario Builder API',
@@ -31,6 +33,8 @@ api = Api(
 )
 
 
+
+api.add_namespace(AdminNamespace)
 api.add_namespace(UserNamespace)
 api.add_namespace(ScenarioNamespace)
 api.add_namespace(CharacterNamespace)

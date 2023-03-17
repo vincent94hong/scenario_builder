@@ -4,13 +4,15 @@ from functools import wraps
 from werkzeug import security
 
 from app.models.user_model import User as UserModel
-from app.apis.api_func import Func
 
 
 ns = Namespace(
     'users',
     description='User API'
 )
+
+
+# scenario = 
 
 
 user = ns.model('User', {
@@ -21,84 +23,30 @@ user = ns.model('User', {
     'email': fields.String(required=False, description='유저 이메일'),
     'phone': fields.String(required=False, description='유저 전화번호'),
     'created_at': fields.DateTime(description='생성일'),
+
+    'scenarios': fields.List(fields.Nested(
+        ns.model('Scenario', {
+            'idx': fields.Integer(require=True, description='시나리오 고유 번호'),
+            'title': fields.String(require=True, description='시나리오 제목'),
+        })), 
+        description='시나리오 리스트')
 })
 
-id_parser = reqparse.RequestParser()
-id_parser.add_argument('id', required=True, help='user id')
 
-parser = id_parser.copy()
+parser = reqparse.RequestParser()
 parser.add_argument('pw', required=True, help='user pw')
-parser.add_argument('name', required=True, help='user name')
-parser.add_argument('email', required=False, help='user email')
-parser.add_argument('phone', required=False, help='user phone')
 
-put_parser = id_parser.copy()
-put_parser.add_argument('pw', required=False, help='user pw')
-put_parser.add_argument('name', required=False, help='user name')
+login_parser = parser.copy()
+login_parser.add_argument('id', required=True, help='user id')
+
+put_parser = parser.copy()
+put_parser.add_argument('name', required=True, help='user name')
 put_parser.add_argument('email', required=False, help='user email')
 put_parser.add_argument('phone', required=False, help='user phone')
 
-login_parser = reqparse.RequestParser()
-login_parser.add_argument('id', required=True, help='user id')
-login_parser.add_argument('pw', required=True, help='user pw')
-   
 
-@ns.route('/admin')
-class UserList(Resource):
-    @ns.expect(id_parser)
-    @ns.marshal_list_with(user, skip_none=True)
-    def get(self):
-        '''관리자 유저 조회'''
-        Func.admin_check()
-        id = id_parser.parse_args()['id']
-        if id:
-            return UserModel.find_user(id)
-        return UserModel.query.all()
-
-    @ns.expect(parser)
-    @ns.marshal_list_with(user, skip_none=True)
-    def post(self):
-        '''유저 생성'''
-        Func.admin_check()
-        args = parser.parse_args()
-        id = args['id']
-        user = UserModel.find_user(id)
-        if user:
-            ns.abort(409)
-        user = UserModel(
-            id = id,
-            pw = security.generate_password_hash(args['pw']),
-            name = args['name'],
-            email = args['email'],
-            phone = args['phone'],
-        )
-        g.db.add(user)
-        g.db.commit()
-        return user, 201
-    
-    @ns.expect(put_parser)
-    @ns.marshal_list_with(user, skip_none=True)
-    def put(self):
-        '''관리자 유저 수정'''
-        Func.admin_check()
-        args = put_parser.parse_args()
-        id = args['id']
-        user = UserModel.find_user(id)
-        if args['pw'] is not None:
-            user.pw = security.generate_password_hash(args['pw'])
-        if args['name'] is not None:
-            user.name = args['name']
-        if args['email'] is not None:
-            user.email = args['email']
-        if args['phone'] is not None:
-            user.phone = args['phone']
-        g.db.commit()
-        return user
-    
-
-@ns.route('/mypage')
+@ns.route('')
 class User(Resource):
-
     @ns.marshal_list_with(user, skip_none=True)
     def get(self):
         '''마이페이지 조회'''
@@ -111,21 +59,21 @@ class User(Resource):
         '''마이페이지 수정'''
         args = put_parser.parse_args()
         user = UserModel.find_user(g.user.id)
-        if args['pw'] is not None:
-            user.pw = security.generate_password_hash(args['pw'])
-        if args['name'] is not None:
-            user.name = args['name']
-        if args['email'] is not None:
-            user.email = args['email']
-        if args['phone'] is not None:
-            user.phone = args['phone']
+        user.pw = security.generate_password_hash(args['pw'])
+        user.name = args['name']
+        user.email = args['email']
+        user.phone = args['phone']
         g.db.commit()
         return user
        
+    @ns.expect(parser)
     @ns.marshal_list_with(user, skip_none=True)
     def delete(self):
         '''회원 탈퇴'''
         user = UserModel.find_user(g.user.id)
+        if not security.check_password_hash(user.pw, parser.parse_args()['pw']):
+            return abort(403)
+        
         g.db.delete(user)
         g.db.commit()
         session.pop('user_id', None)
@@ -137,6 +85,7 @@ class User(Resource):
 @ns.route('/login')
 class UserLogin(Resource):
 
+    @ns.response(403, '비밀번호가 일치하지 않습니다.')
     @ns.expect(login_parser)
     @ns.marshal_list_with(user, skip_none=True)
     def get(self):
@@ -149,5 +98,5 @@ class UserLogin(Resource):
                 g.user = user
                 return user
             else:
-                return flash('비밀번호를 확인해주세요.')
-        return abort(409)
+                return abort(403)
+        return abort(404)

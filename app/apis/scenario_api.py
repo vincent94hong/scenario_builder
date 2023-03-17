@@ -1,86 +1,62 @@
-from flask import g, abort, flash
+from flask import g, abort
 from flask_restx import Api, Namespace, fields, reqparse, Resource
 from app.models.scenario_model import Scenario as ScenarioModel
-from app.models.user_model import User as UserModel
-from app.apis.api_func import Func
+# from app.models.user_model import User as UserModel
 
 
 ns = Namespace(
-    'scenarios',
+    'users/scenarios',
     description='시나리오 관련 API'
 )
 
 
+# character = 
+
+
 scenario = ns.model('Scenario', {
     'idx': fields.Integer(required=True, description='시나리오 고유 번호'),
-    'user_idx': fields.String(required=True, description='유저 고유 번호'),
+    'user_id': fields.String(required=True, description='유저 고유 번호'),
     'title': fields.String(required=True, description='시나리오 제목'),
     'content': fields.String(required=True, description='시나리오 설명'),
     'created_at': fields.DateTime(description='생성일'),
     'updated_at': fields.DateTime(description='수정일'),
+
+    'characters': fields.List(fields.Nested(
+        ns.model('Character', {
+            'idx': fields.Integer(require=True, description='캐릭터 고유 번호'),
+            'name': fields.String(require=True, description='캐릭터 이름'),
+            'is_opened': fields.Boolean(require=True, description='캐릭터 공개 여부')
+        })), 
+        description='캐릭터 리스트')
 })
 
 
-search_user_parser = reqparse.RequestParser()
-search_user_parser.add_argument('title', required=False, help='scenario title')
+parser = reqparse.RequestParser()
+parser.add_argument('title', required=True, help='scenario title')
 
-search_parser = search_user_parser.copy()
-search_parser.add_argument('user_id', required=False, help='user id')
-
-delete_parser = reqparse.RequestParser()
-delete_parser.add_argument('title', required=True, help='scenario title')
-
-
-post_parser = reqparse.RequestParser()
-post_parser.add_argument('title', required=True, help='scenario title')
+post_parser = parser.copy()
 post_parser.add_argument('content', required=False, help='scenario content')
-
-put_parser = post_parser.copy()
-put_parser.add_argument('re_title', required=False, help='scenario title upadate')
-
-
-@ns.route('/admin')
-class ScenarioList(Resource):
-    @ns.expect(search_parser)
-    @ns.marshal_list_with(scenario, skip_none=True)
-    def get(self):
-        '''시나리오 조회'''
-        Func.admin_check()
-        args = search_parser.parse_args()
-        user = UserModel.find_user(args['user_id'])
-        title = args['title']
-        if user:
-            if title:
-                return ScenarioModel.find_scenario_by_title(user.idx, title)
-            else:
-                return ScenarioModel.find_scenarios_sort_user(user.idx)
-        if title:
-            return ScenarioModel.find_scenarios_sort_title(title)
-        return ScenarioModel.query.all()
     
 
 @ns.route('')
-class UserScenario(Resource):
-    @ns.expect(search_user_parser)
+class Scenario(Resource):
     @ns.marshal_list_with(scenario, skip_none=True)
     def get(self):
         '''시나리오 조회'''
-        title = search_user_parser.parse_args()['title']
-        if title:
-            return ScenarioModel.find_scenario_by_title(g.user.idx, title)
-        return ScenarioModel.find_scenarios_sort_user(g.user.idx)
+        return ScenarioModel.find_scenarios(g.user.id)
 
+    @ns.response(409, 'This Scenario Title is already exists.')
     @ns.expect(post_parser)
     @ns.marshal_list_with(scenario, skip_none=True)
     def post(self):
         '''시나리오 생성'''
         args = post_parser.parse_args()
         title = args['title']
-        scenario = ScenarioModel.find_scenario_by_title(g.user.idx, title)
+        scenario = ScenarioModel.find_scenario(g.user.id, title)
         if scenario:
             return ns.abort(409)
         scenario = ScenarioModel(
-            user_idx = g.user.idx,
+            user_id = g.user.id,
             title = title,
             content = args['content'],
         )
@@ -88,30 +64,30 @@ class UserScenario(Resource):
         g.db.commit()
         return scenario, 201
     
-    @ns.expect(put_parser)
+    @ns.response(404, '수정할 시나리오가 없습니다. 시나리오 제목을 다시 입력해주세요.')
+    @ns.expect(post_parser)
     @ns.marshal_list_with(scenario, skip_none=True)
     def put(self):
         '''시나리오 수정'''
-        args = put_parser.parse_args()
-        title = args['title']
-        scenario = ScenarioModel.find_scenario_by_title(g.user.idx, title)
+        args = post_parser.parse_args()
+        scenario = ScenarioModel.find_scenario(g.user.id, args['scenario'])
         if not scenario:
-            return ns.abort(409)
-        if args['re_title'] is not None:
-            scenario.title = args['re_title']
-        if args['content'] is not None:
-            scenario.content = args['content']
+            return ns.abort(404)
+        scenario.title = args['title']
+        scenario.content = args['content']
         g.db.commit()
         return scenario
     
-    @ns.expect(delete_parser)
+    @ns.response(404, '삭제할 시나리오가 없습니다. 시나리오 제목을 다시 입력해주세요.')
+    @ns.expect(parser)
     @ns.marshal_list_with(scenario, skip_none=True)
     def delete(self):
         '''시나리오 삭제'''
-        title = delete_parser.parse_args()['title']
-        scenario = ScenarioModel.find_scenario_by_title(g.user.idx, title)
+        args = parser.parse_args()
+        scenario = ScenarioModel.find_scenario(g.user.id, args['scenario'])
         if not scenario:
-            return ns.abort(409)
+            return ns.abort(404)
         g.db.delete(scenario)
         g.db.commit()
         return '', 204
+    
