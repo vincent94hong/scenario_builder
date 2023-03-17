@@ -4,10 +4,11 @@ from functools import wraps
 from werkzeug import security
 
 from app.models.user_model import User as UserModel
+from app.apis.api_func import Func
 
 
 ns = Namespace(
-    'user',
+    'users',
     description='User API'
 )
 
@@ -40,33 +41,28 @@ put_parser.add_argument('phone', required=False, help='user phone')
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('id', required=True, help='user id')
 login_parser.add_argument('pw', required=True, help='user pw')
+   
 
-
-def admin_check():
-    if g.user.id != 'admin':
-        return abort(403)
-    
-
-@ns.route('')
+@ns.route('/admin')
 class UserList(Resource):
     @ns.expect(id_parser)
     @ns.marshal_list_with(user, skip_none=True)
     def get(self):
         '''관리자 유저 조회'''
-        admin_check()
+        Func.admin_check()
         id = id_parser.parse_args()['id']
         if id:
-            return UserModel.find_one_by_user_id(id)
+            return UserModel.find_user(id)
         return UserModel.query.all()
 
     @ns.expect(parser)
     @ns.marshal_list_with(user, skip_none=True)
     def post(self):
         '''유저 생성'''
-        admin_check()
+        Func.admin_check()
         args = parser.parse_args()
         id = args['id']
-        user = UserModel.find_one_by_user_id(id)
+        user = UserModel.find_user(id)
         if user:
             ns.abort(409)
         user = UserModel(
@@ -84,10 +80,10 @@ class UserList(Resource):
     @ns.marshal_list_with(user, skip_none=True)
     def put(self):
         '''관리자 유저 수정'''
-        admin_check()
+        Func.admin_check()
         args = put_parser.parse_args()
         id = args['id']
-        user = UserModel.find_one_by_user_id(id)
+        user = UserModel.find_user(id)
         if args['pw'] is not None:
             user.pw = security.generate_password_hash(args['pw'])
         if args['name'] is not None:
@@ -106,7 +102,7 @@ class User(Resource):
     @ns.marshal_list_with(user, skip_none=True)
     def get(self):
         '''마이페이지 조회'''
-        user = UserModel.find_one_by_user_id(g.user.id)
+        user = UserModel.find_user(g.user.id)
         return user
 
     @ns.expect(put_parser)
@@ -114,7 +110,7 @@ class User(Resource):
     def put(self):
         '''마이페이지 수정'''
         args = put_parser.parse_args()
-        user = UserModel.find_one_by_user_id(g.user.id)
+        user = UserModel.find_user(g.user.id)
         if args['pw'] is not None:
             user.pw = security.generate_password_hash(args['pw'])
         if args['name'] is not None:
@@ -128,8 +124,8 @@ class User(Resource):
        
     @ns.marshal_list_with(user, skip_none=True)
     def delete(self):
-        '''마이페이지 삭제'''
-        user = UserModel.find_one_by_user_id(g.user.id)
+        '''회원 탈퇴'''
+        user = UserModel.find_user(g.user.id)
         g.db.delete(user)
         g.db.commit()
         session.pop('user_id', None)
@@ -146,7 +142,7 @@ class UserLogin(Resource):
     def get(self):
         '''유저 전환'''
         args = login_parser.parse_args()
-        user = UserModel.find_one_by_user_id(args['id'])
+        user = UserModel.find_user(args['id'])
         if user:
             if security.check_password_hash(user.pw, args['pw']):
                 session['user_id'] = user.id

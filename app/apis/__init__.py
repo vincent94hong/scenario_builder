@@ -3,7 +3,7 @@ from flask_restx import Api
 from functools import wraps
 
 from .user_api import ns as UserNamespace
-# from .character_api import ns as CharacterNamespace
+from .character_api import ns as CharacterNamespace
 from .scenario_api import ns as ScenarioNamespace
 
 def check_session(func):
@@ -33,4 +33,4 @@ api = Api(
 
 api.add_namespace(UserNamespace)
 api.add_namespace(ScenarioNamespace)
-# api.add_namespace(CharacterNamespace)
+api.add_namespace(CharacterNamespace)

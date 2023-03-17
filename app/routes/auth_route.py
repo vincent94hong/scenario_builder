@@ -14,7 +14,7 @@ def before_app_request():
     g.user = None
     id = session.get('user_id')
     if id:
-        user = UserModel.find_one_by_user_id(id)
+        user = UserModel.find_user(id)
         if user:
             g.user = user
         else:
@@ -27,7 +27,7 @@ def login():
     if request.method == 'POST' and form.validate_on_submit():
         id = form.data.get('id')
         pw = form.data.get('pw')
-        user = UserModel.find_one_by_user_id(id)
+        user = UserModel.find_user(id)
         if user:
             if not security.check_password_hash(user.pw, pw):
                 flash('비밀번호를 확인해주세요.')
@@ -50,7 +50,7 @@ def sign_up():
     form = SignUpForm()
     if request.method == 'POST' and form.validate_on_submit():
         id = form.data.get('id')
-        user = UserModel.find_one_by_user_id(id)
+        user = UserModel.find_user(id)
         if not user:
             g.db.add(
                 UserModel(
