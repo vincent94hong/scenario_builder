@@ -35,7 +35,7 @@ post_parser.add_argument('id', required=True, help='user id')
 
 # @ns.deprecated
 @ns.response(409, 'User id is already exists.')
-@ns.route('/user')
+@ns.route('/users')
 class UserList(Resource):
     @ns.marshal_list_with(user, skip_none=True)
     def get(self):
@@ -98,6 +98,14 @@ class User(Resource):
     
 
 # @ns.deprecated
+@ns.route('/<id>/scenarios')
+class ScenarioList(Resource):
+    @ns.marshal_list_with(scenario, skip_none=True)
+    def get(self, id):
+        '''시나리오 전체 조회'''
+        Admin.admin_check()
+        return ScenarioModel.find_scenarios(id)
+    
 @ns.route('/<id>/<scenario>')
 class ScenarioList(Resource):
     @ns.marshal_list_with(scenario, skip_none=True)
@@ -108,12 +116,21 @@ class ScenarioList(Resource):
     
 
 # @ns.deprecated
+@ns.route('/<id>/<scenario>/characters')
+class CharacterList(Resource):
+    @ns.marshal_list_with(character, skip_none=True)
+    def get(self, id, scenario):
+        '''캐릭터 전체 조회'''
+        Admin.admin_check()
+        # scenario = ScenarioModel.find_scenario(id, scenario)
+        return CharacterModel.find_characters(scenario)
+    
 @ns.route('/<id>/<scenario>/<character>')
 class CharacterList(Resource):
     @ns.marshal_list_with(character, skip_none=True)
     def get(self, id, scenario, character):
         '''캐릭터 전체 조회'''
         Admin.admin_check()
-        scenario = ScenarioModel.find_scenario(id, scenario)
-        return CharacterModel.find_character(scenario.idx, character)
+        # scenario = ScenarioModel.find_scenario(id, scenario)
+        return CharacterModel.find_character(scenario, character)
     

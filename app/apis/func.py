@@ -1,6 +1,6 @@
 from flask import g, abort
 from app.models.scenario_model import Scenario
-from app.models.setting.character_model import Character, Element
+from app.models.setting.character_model import Character, CharacterElement
 
 
 class Admin():

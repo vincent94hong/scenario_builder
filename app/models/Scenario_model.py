@@ -12,6 +12,9 @@ class Scenario(db.Model):
     updated_at = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.now())
 
     characters = db.relationship('Character')
+    backgrounds = db.relationship('Background')
+    items = db.relationship('Item')
+    maps = db.relationship('Map')
 
     @classmethod
     def find_scenario(cls,user_id, scenario_title):

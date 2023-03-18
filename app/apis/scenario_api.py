@@ -31,6 +31,9 @@ scenario = ns.model('Scenario', {
 })
 
 
+search_parser = reqparse.RequestParser()
+search_parser.add_argument('title', required=False, help='scenario title')
+
 parser = reqparse.RequestParser()
 parser.add_argument('title', required=True, help='scenario title')
 

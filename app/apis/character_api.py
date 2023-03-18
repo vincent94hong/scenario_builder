@@ -24,7 +24,7 @@ character = ns.model('Character', {
     'is_opened': fields.Boolean(default=False, description='공개 여부'),
     'is_deleted': fields.Boolean(default=False, description='삭제 여부'),
 
-    'elements': fields.List(fields.Nested(ns.model('Element', {
+    'elements': fields.List(fields.Nested(ns.model('CharacterElement', {
         'element': fields.String(required=True, description='캐릭터 설정 항목'),
         'content': fields.String(required=True, description='캐릭터 설정 내용'),
         'is_opened' : fields.Boolean(default=False, description='캐릭터 설정 내용')
@@ -85,3 +85,5 @@ class Character(Resource):
     # @ns.expect()
     # @ns.marshal_list_with(character, skip_none=True)
     # def put(self):
+
+
