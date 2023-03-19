@@ -13,12 +13,12 @@ class Admin():
             return abort(403)
         
  
-class Find():
-    def find_scenario_idx(scenario_title):
-        scenario = Scenario.find_scenario(g.user.id, scenario_title)
-        if not scenario:
-            return abort(404)
-        return scenario
+# class Find():
+#     def find_scenario(scenario_title):
+#         scenario = Scenario.find_scenario(g.user.id, scenario_title)
+#         if not scenario:
+#             return abort(404)
+#         return scenario
 
 #     def find_character_by_name(args):
 #         scenario = Scenario.find_scenario(g.user.idx, args['scenario_title'])

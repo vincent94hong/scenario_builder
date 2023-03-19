@@ -17,7 +17,7 @@ class Scenario(db.Model):
     maps = db.relationship('Map')
 
     @classmethod
-    def find_scenario(cls,user_id, scenario_title):
+    def find_scenario(cls, user_id, scenario_title):
         return Scenario.query. filter_by(user_id=user_id, title=scenario_title).first()
     
     @classmethod

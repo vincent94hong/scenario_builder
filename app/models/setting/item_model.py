@@ -50,7 +50,7 @@ class ItemElement(db.Model):
     item_idx = db.Column(db.Integer, db.ForeignKey('item.idx', ondelete='CASCADE'))
     item_name = db.Column(db.String(50), nullable=False)
 
-    element = db.Column(db.String(100), nullable=False) # 중복조회(해당 유저의 시나리오에 한해서 unique)
+    name = db.Column(db.String(100), nullable=False) # 중복조회(해당 유저의 시나리오에 한해서 unique)
     content = db.Column(db.String(1000), nullable=False)
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.now())
@@ -64,7 +64,7 @@ class ItemElement(db.Model):
             user_id=user_id,
             scenario_title=scenario_title,
             item_name=item_name,
-            element_name=element_name
+            name=element_name
         ).first()
 
     @classmethod
@@ -80,5 +80,5 @@ class ItemElement(db.Model):
         return ItemElement.query.filter_by(
             user_id=user_id,
             scenario_title=scenario_title,
-            element_name=element_name
+            name=element_name
         ).all().item_name

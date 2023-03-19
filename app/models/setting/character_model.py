@@ -50,7 +50,7 @@ class CharacterElement(db.Model):
     character_idx = db.Column(db.Integer, db.ForeignKey('character.idx', ondelete='CASCADE'))
     character_name = db.Column(db.String(50), nullable=False)
 
-    element = db.Column(db.String(100), nullable=False) # 중복조회(해당 유저의 시나리오에 한해서 unique)
+    name = db.Column(db.String(100), nullable=False) # 중복조회(해당 유저의 시나리오에 한해서 unique)
     content = db.Column(db.String(1000), nullable=False)
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.now())
@@ -64,17 +64,21 @@ class CharacterElement(db.Model):
             user_id=user_id,
             scenario_title=scenario_title,
             character_name=character_name,
-            element_name=element_name
+            name=element_name
         ).first()
 
     @classmethod
-    def find_elements(cls, user_id, character_name):
-        return CharacterElement.query.filter_by(user_id=user_id, character_name=character_name).all()
+    def find_elements(cls, user_id, scenario_title, character_name):
+        return CharacterElement.query.filter_by(
+            user_id=user_id, 
+            scenario_title=scenario_title, 
+            character_name=character_name
+        ).all()
 
     @classmethod
     def find_characters_by_element(cls, user_id, scenario_title, element_name):
         return CharacterElement.query.filter_by(
             user_id=user_id,
             scenario_title=scenario_title,
-            element_name=element_name
+            name=element_name
         ).all().character_name
