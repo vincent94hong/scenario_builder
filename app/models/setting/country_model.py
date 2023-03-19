@@ -15,7 +15,7 @@ class Country(db.Model):
     is_opened = db.Column(db.Boolean(), default=False)
     is_deleted = db.Column(db.Boolean(), default=False)
 
-    elements = db.relationship('CountryElement')
+    elements = db.relationship('CountryElement', backref=db.backref('country'))
 
     @classmethod
     def find_country(cls, user_id, scenario_title, country_name):

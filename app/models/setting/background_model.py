@@ -15,7 +15,7 @@ class Background(db.Model):
     is_opened = db.Column(db.Boolean(), default=False)
     is_deleted = db.Column(db.Boolean(), default=False)
 
-    elements = db.relationship('BackgroundElement')
+    elements = db.relationship('BackgroundElement', backref=db.backref('background'))
 
     @classmethod
     def find_background(cls, user_id, scenario_title, background_name):
@@ -26,8 +26,8 @@ class Background(db.Model):
         ).first()
 
     @classmethod
-    def find_background(cls, user_id, scenario_title): 
-        '''공개 여부 관계없이, 모든 캐릭터'''
+    def find_backgrounds(cls, user_id, scenario_title): 
+        '''공개 여부 관계없이, 모든 설정'''
         return Background.query.filter_by(
             user_id = user_id,
             scenario_title=scenario_title
@@ -35,7 +35,7 @@ class Background(db.Model):
 
     @classmethod
     def find_opened_background(cls, user_id, scenario_title, is_opened=True): 
-        '''is_opened = (True=default / False) : (공개된 / 공개되지 않은) 등장인물'''
+        '''is_opened = (True=default / False) : (공개된 / 공개되지 않은) 설정'''
         return Background.query.filter_by( 
             user_id = user_id,
             scenario_title=scenario_title, 

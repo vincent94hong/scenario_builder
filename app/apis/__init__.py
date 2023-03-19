@@ -4,8 +4,15 @@ from functools import wraps
 
 from .admin_api import ns as AdminNamespace
 from .user_api import ns as UserNamespace
-from .character_api import ns as CharacterNamespace
 from .scenario_api import ns as ScenarioNamespace
+from .character_api import ns as CharacterNamespace
+from .character_elements_api import ns as CharacterElementNamespace
+from .background_api import ns as BackgroundNamespace
+from .background_elements_api import ns as BackgroundElementNamespace
+from .country_api import ns as CountryNamespace
+from .country_elements_api import ns as CountryElementNamespace
+from .item_api import ns as ItemNamespace
+from .item_elements_api import ns as ItemElementNamespace
 
 def check_session(func):
     @wraps(func)
@@ -38,3 +45,10 @@ api.add_namespace(AdminNamespace)
 api.add_namespace(UserNamespace)
 api.add_namespace(ScenarioNamespace)
 api.add_namespace(CharacterNamespace)
+api.add_namespace(CharacterElementNamespace)
+api.add_namespace(BackgroundNamespace)
+api.add_namespace(BackgroundElementNamespace)
+api.add_namespace(CountryNamespace)
+api.add_namespace(CountryElementNamespace)
+api.add_namespace(ItemNamespace)
+api.add_namespace(ItemElementNamespace)

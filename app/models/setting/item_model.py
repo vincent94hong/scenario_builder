@@ -2,6 +2,12 @@ from sqlalchemy import func
 from app import db
 
 
+items_characters = db.Table('items_characters',
+    db.Column('item_idx', db.Integer, db.ForeignKey('item.idx'), primary_key=True),
+    db.Column('character_idx', db.Integer, db.ForeignKey('character.idx'), primary_key=True),
+)
+
+
 class Item(db.Model):
     idx = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String(20), nullable=False)
@@ -15,7 +21,8 @@ class Item(db.Model):
     is_opened = db.Column(db.Boolean(), default=False)
     is_deleted = db.Column(db.Boolean(), default=False)
 
-    elements = db.relationship('ItemElement')
+    elements = db.relationship('ItemElement', backref=db.backref('item'))
+    characters = db.relationship('Character', secondary='items_characters', back_populates='items')
 
     @classmethod
     def find_item(cls, user_id, scenario_title, item_name):

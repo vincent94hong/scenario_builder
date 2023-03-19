@@ -1,31 +1,31 @@
 from flask import g, abort
 from flask_restx import Namespace, fields, reqparse, Resource, inputs
 
-from app.models.setting.background_model import Background as BackgroundModel
-from app.models.setting.background_model import BackgroundElement as BackgroundElementModel
+from app.models.setting.item_model import Item as ItemModel
+from app.models.setting.item_model import ItemElement as ItemElementModel
 from app.models.scenario_model import Scenario as ScenarioModel
 # from app.apis.func import Find
 
 
 ns = Namespace(
-    'users/scenarios/backgrounds/elements',
-    description='등장인물 속성 관련 API'
+    'users/scenarios/items/elements',
+    description='아이템 속성 관련 API'
 )
 
 
 
-element = ns.model('BackgroundElement', {
+element = ns.model('itemElement', {
     'scenario_title': fields.String(required=True, description='시나리오 제목'),
-    'background_name': fields.String(required=True, description='배경 이름'),
-    'name': fields.String(required=True, description='배경 설정 항목'),
-    'content': fields.String(required=True, description='배경 설정 내용'),
-    'is_opened' : fields.Boolean(description='배경 설정 공개 여부')
+    'item_name': fields.String(required=True, description='아이템 이름'),
+    'name': fields.String(required=True, description='아이템 속성 항목'),
+    'content': fields.String(required=True, description='아이템 속성 내용'),
+    'is_opened' : fields.Boolean(description='아이템 속성 공개 여부')
 })
 
 
 parser = reqparse.RequestParser()
 parser.add_argument('scenario_title', required=True, help='시나리오 제목')
-parser.add_argument('background_name', required=True, help='background 이름')
+parser.add_argument('item_name', required=True, help='item 이름')
 
 post_parser = parser.copy()
 post_parser.add_argument('name', required=True, help='element 이름')
@@ -47,8 +47,8 @@ class Element(Resource):
     def get(self):
         args = parser.parse_args()
         scenario_title = args['scenario_title']
-        background_name = args['background_name']
-        elements = BackgroundElementModel.find_elements(g.user.id, scenario_title, background_name)
+        item_name = args['item_name']
+        elements = ItemElementModel.find_elements(g.user.id, scenario_title, item_name)
         return elements
 
     @ns.expect(post_parser)
@@ -56,22 +56,22 @@ class Element(Resource):
     def post(self):
         args = post_parser.parse_args()
         scenario_title = args['scenario_title']
-        background_name = args['background_name']
+        item_name = args['item_name']
         name = args['name']
-        element = BackgroundElementModel.find_element(
+        element = ItemElementModel.find_element(
             g.user.id, 
             scenario_title, 
-            background_name,
+            item_name,
             name
         )
         if element:
             return abort(409)
         
-        element = BackgroundElementModel(
+        element = ItemElementModel(
             user_id=g.user.id,
-            background_idx = BackgroundModel.find_background(g.user.id, scenario_title, background_name).idx,
+            item_idx = ItemModel.find_item(g.user.id, scenario_title, item_name).idx,
             scenario_title = scenario_title,
-            background_name = background_name,
+            item_name = item_name,
             name = name,
             content = args['content'],
             is_opened = args['is_opened']
@@ -85,9 +85,9 @@ class Element(Resource):
     def put(self):
         args = post_parser.parse_args()
         scenario_title = args['scenario_title']
-        background_name = args['background_name']
+        item_name = args['item_name']
         name = args['name']
-        element = BackgroundElementModel.find_element(g.user.id, scenario_title, background_name, name)
+        element = ItemElementModel.find_element(g.user.id, scenario_title, item_name, name)
         if not element:
             return abort(404)
         
@@ -104,10 +104,10 @@ class Element(Resource):
     @ns.marshal_list_with(element, skip_none=True)
     def delete(self):
         args = delete_parser.parse_args()
-        element = BackgroundElementModel.find_element(
+        element = ItemElementModel.find_element(
             g.user.id, 
             scenario_title=args['scenario_title'], 
-            background_name=args['background_name'],
+            item_name=args['item_name'],
             name = args['name']
         )
         if not element:

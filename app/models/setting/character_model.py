@@ -15,7 +15,8 @@ class Character(db.Model):
     is_opened = db.Column(db.Boolean(), default=False)
     is_deleted = db.Column(db.Boolean(), default=False)
 
-    elements = db.relationship('CharacterElement')
+    elements = db.relationship('CharacterElement', backref=db.backref('character'))
+    items = db.relationship('Item', secondary='items_characters', back_populates='characters')
 
     @classmethod
     def find_character(cls, user_id, scenario_title, character_name):

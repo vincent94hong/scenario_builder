@@ -11,10 +11,10 @@ class Scenario(db.Model):
     created_at = db.Column(db.DateTime(), server_default=func.now())
     updated_at = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.now())
 
-    characters = db.relationship('Character')
-    backgrounds = db.relationship('Background')
-    items = db.relationship('Item')
-    maps = db.relationship('Map')
+    characters = db.relationship('Character', backref=db.backref('scenario'))
+    backgrounds = db.relationship('Background', backref=db.backref('scenario'))
+    countries = db.relationship('Country', backref=db.backref('scenario'))
+    items = db.relationship('Item', backref=db.backref('scenario'))
 
     @classmethod
     def find_scenario(cls, user_id, scenario_title):

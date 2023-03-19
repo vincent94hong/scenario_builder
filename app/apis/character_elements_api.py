@@ -1,5 +1,5 @@
 from flask import g, abort
-from flask_restx import Namespace, fields, reqparse, Resource
+from flask_restx import Namespace, fields, reqparse, Resource, inputs
 
 from app.models.setting.character_model import Character as CharacterModel
 from app.models.setting.character_model import CharacterElement as CharacterElementModel
@@ -19,7 +19,7 @@ element = ns.model('CharacterElement', {
     'character_name': fields.String(required=True, description='캐릭터 이름'),
     'name': fields.String(required=True, description='캐릭터 설정 항목'),
     'content': fields.String(required=True, description='캐릭터 설정 내용'),
-    'is_opened' : fields.Boolean(default=False, description='캐릭터 설정 내용')
+    'is_opened' : fields.Boolean(description='캐릭터 설정 내용')
 })
 
 
@@ -29,11 +29,12 @@ parser.add_argument('character_name', required=True, help='character 이름')
 
 post_parser = parser.copy()
 post_parser.add_argument('name', required=True, help='element 이름')
-post_parser.add_argument('content', required=False, help='element 설명')
-post_parser.add_argument('is_opened', required=False, help='element 공개 여부')
+post_parser.add_argument('content', required=True, help='element 설명')
+post_parser.add_argument('is_opened', required=False, type=inputs.boolean, help='element 공개 여부')
 
 put_parser = post_parser.copy()
 put_parser.add_argument('re_name', required=False, help='element 이름')
+put_parser.add_argument('content', required=False, help='element 이름')
 
 delete_parser = parser.copy()
 delete_parser.add_argument('name', required=True, help='element 이름')
@@ -68,8 +69,8 @@ class Element(Resource):
         
         element = CharacterElementModel(
             user_id=g.user.id,
-            character_idx = CharacterModel.find_character(g.user.id, scenario_title, character_name).idx,
             scenario_title = scenario_title,
+            character_idx = CharacterModel.find_character(g.user.id, scenario_title, character_name).idx,
             character_name = character_name,
             name = name,
             content = args['content'],

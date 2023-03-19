@@ -1,5 +1,5 @@
 from flask import g, abort
-from flask_restx import Api, Namespace, fields, reqparse, Resource
+from flask_restx import Api, Namespace, fields, reqparse, Resource, inputs
 from app.models.scenario_model import Scenario as ScenarioModel
 # from app.models.user_model import User as UserModel
 
@@ -25,9 +25,30 @@ scenario = ns.model('Scenario', {
         ns.model('Character', {
             'idx': fields.Integer(require=True, description='캐릭터 고유 번호'),
             'name': fields.String(require=True, description='캐릭터 이름'),
-            'is_opened': fields.Boolean(require=True, description='캐릭터 공개 여부')
+            'is_opened': fields.Boolean(description='캐릭터 공개 여부')
         })), 
-        description='캐릭터 리스트')
+        description='캐릭터 리스트'),
+    'backgrounds': fields.List(fields.Nested(
+        ns.model('Background', {
+            'idx': fields.Integer(require=True, description='설정 고유 번호'),
+            'name': fields.String(require=True, description='설정 이름'),
+            'is_opened': fields.Boolean(description='설정 공개 여부')
+        })), 
+        description='배경 설정 리스트'),
+    'countries': fields.List(fields.Nested(
+        ns.model('Country', {
+            'idx': fields.Integer(require=True, description='지역/국가 고유 번호'),
+            'name': fields.String(require=True, description='지역/국가 이름'),
+            'is_opened': fields.Boolean(description='지역/국가 공개 여부')
+        })), 
+        description='지역/국가 리스트'),
+    'items': fields.List(fields.Nested(
+        ns.model('Item', {
+            'idx': fields.Integer(require=True, description='아이템 고유 번호'),
+            'name': fields.String(require=True, description='아이템 이름'),
+            'is_opened': fields.Boolean(description='아이템 공개 여부')
+        })), 
+        description='아이템 리스트'),
 })
 
 
