@@ -5,14 +5,14 @@ from functools import wraps
 from .admin_api import ns as AdminNamespace
 from .user_api import ns as UserNamespace
 from .scenario_api import ns as ScenarioNamespace
-from .character_api import ns as CharacterNamespace
-from .character_elements_api import ns as CharacterElementNamespace
-from .background_api import ns as BackgroundNamespace
-from .background_elements_api import ns as BackgroundElementNamespace
-from .country_api import ns as CountryNamespace
-from .country_elements_api import ns as CountryElementNamespace
-from .item_api import ns as ItemNamespace
-from .item_elements_api import ns as ItemElementNamespace
+from app.apis.setting.character_api import ns as CharacterNamespace
+from app.apis.setting.character_elements_api import ns as CharacterElementNamespace
+from app.apis.setting.background_api import ns as BackgroundNamespace
+from app.apis.setting.background_elements_api import ns as BackgroundElementNamespace
+from app.apis.setting.country_api import ns as CountryNamespace
+from app.apis.setting.country_elements_api import ns as CountryElementNamespace
+from app.apis.setting.item_api import ns as ItemNamespace
+from app.apis.setting.item_elements_api import ns as ItemElementNamespace
 
 def check_session(func):
     @wraps(func)
