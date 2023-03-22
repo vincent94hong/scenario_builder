@@ -338,7 +338,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # sqlite3
-*.db
+# *.db
 
 # User images
 # 추후 이미지 저장경로
