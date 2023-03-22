@@ -35,7 +35,7 @@ api = Api(
     title='Scenario Builder API',
     version='1.0',
     doc='/docs',
-    decorators=[check_session],
+    # decorators=[check_session],
     description='Welcome Scenario Builder API'
 )
 

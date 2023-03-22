@@ -2,7 +2,7 @@ from flask import Flask, g
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
+# from flask_jwt_extended import JWTManager
 
 
 
@@ -27,7 +27,7 @@ def create_app(config=None):
 
 
     '''jwt tocken'''
-    jwt = JWTManager(app)
+    # jwt = JWTManager(app)
 
 
     '''CSRFProtect'''
