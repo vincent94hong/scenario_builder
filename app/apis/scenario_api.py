@@ -14,41 +14,41 @@ ns = Namespace(
 
 
 scenario = ns.model('Scenario', {
-    'idx': fields.Integer(required=True, description='시나리오 고유 번호'),
-    'user_id': fields.String(required=True, description='유저 고유 번호'),
+    # 'idx': fields.Integer(required=True, description='시나리오 고유 번호'),
+    # 'user_id': fields.String(required=True, description='유저 고유 번호'),
     'title': fields.String(required=True, description='시나리오 제목'),
     'content': fields.String(required=True, description='시나리오 설명'),
-    'created_at': fields.DateTime(description='생성일'),
-    'updated_at': fields.DateTime(description='수정일'),
+    # 'created_at': fields.DateTime(description='생성일'),
+    # 'updated_at': fields.DateTime(description='수정일'),
 
-    'characters': fields.List(fields.Nested(
-        ns.model('Character', {
-            'idx': fields.Integer(require=True, description='캐릭터 고유 번호'),
-            'name': fields.String(require=True, description='캐릭터 이름'),
-            'is_opened': fields.Boolean(description='캐릭터 공개 여부')
-        })), 
-        description='캐릭터 리스트'),
-    'backgrounds': fields.List(fields.Nested(
-        ns.model('Background', {
-            'idx': fields.Integer(require=True, description='설정 고유 번호'),
-            'name': fields.String(require=True, description='설정 이름'),
-            'is_opened': fields.Boolean(description='설정 공개 여부')
-        })), 
-        description='배경 설정 리스트'),
-    'countries': fields.List(fields.Nested(
-        ns.model('Country', {
-            'idx': fields.Integer(require=True, description='지역/국가 고유 번호'),
-            'name': fields.String(require=True, description='지역/국가 이름'),
-            'is_opened': fields.Boolean(description='지역/국가 공개 여부')
-        })), 
-        description='지역/국가 리스트'),
-    'items': fields.List(fields.Nested(
-        ns.model('Item', {
-            'idx': fields.Integer(require=True, description='아이템 고유 번호'),
-            'name': fields.String(require=True, description='아이템 이름'),
-            'is_opened': fields.Boolean(description='아이템 공개 여부')
-        })), 
-        description='아이템 리스트'),
+    # 'characters': fields.List(fields.Nested(
+    #     ns.model('Character', {
+    #         'idx': fields.Integer(require=True, description='캐릭터 고유 번호'),
+    #         'name': fields.String(require=True, description='캐릭터 이름'),
+    #         'is_opened': fields.Boolean(description='캐릭터 공개 여부')
+    #     })), 
+    #     description='캐릭터 리스트'),
+    # 'backgrounds': fields.List(fields.Nested(
+    #     ns.model('Background', {
+    #         'idx': fields.Integer(require=True, description='설정 고유 번호'),
+    #         'name': fields.String(require=True, description='설정 이름'),
+    #         'is_opened': fields.Boolean(description='설정 공개 여부')
+    #     })), 
+    #     description='배경 설정 리스트'),
+    # 'countries': fields.List(fields.Nested(
+    #     ns.model('Country', {
+    #         'idx': fields.Integer(require=True, description='지역/국가 고유 번호'),
+    #         'name': fields.String(require=True, description='지역/국가 이름'),
+    #         'is_opened': fields.Boolean(description='지역/국가 공개 여부')
+    #     })), 
+    #     description='지역/국가 리스트'),
+    # 'items': fields.List(fields.Nested(
+    #     ns.model('Item', {
+    #         'idx': fields.Integer(require=True, description='아이템 고유 번호'),
+    #         'name': fields.String(require=True, description='아이템 이름'),
+    #         'is_opened': fields.Boolean(description='아이템 공개 여부')
+    #     })), 
+    #     description='아이템 리스트'),
 })
 
 

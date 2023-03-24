@@ -2,6 +2,7 @@ from flask import Flask, g
 from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS, cross_origin
 # from flask_jwt_extended import JWTManager
 
 
@@ -13,7 +14,7 @@ migrate = Migrate()
 
 def create_app(config=None):
     app = Flask(__name__)
-
+    CORS(app) # localhost 모든 origin 사용 가능하도록 하기.
 
     '''Configuration'''
     from .configs import DevelopmentConfig, ProductionConfig

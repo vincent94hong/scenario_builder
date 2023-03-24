@@ -123,7 +123,7 @@ class CharacterList(Resource):
         '''캐릭터 전체 조회'''
         # Admin.admin_check()
         # scenario = ScenarioModel.find_scenario(id, scenario)
-        return CharacterModel.find_characters(scenario)
+        return CharacterModel.find_characters(id, scenario)
     
 @ns.route('/<id>/<scenario>/<character>')
 class CharacterList(Resource):
@@ -132,5 +132,5 @@ class CharacterList(Resource):
         '''캐릭터 전체 조회'''
         # Admin.admin_check()
         # scenario = ScenarioModel.find_scenario(id, scenario)
-        return CharacterModel.find_character(scenario, character)
+        return CharacterModel.find_character(id, scenario, character)
     

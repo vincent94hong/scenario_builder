@@ -16,17 +16,17 @@ ns = Namespace(
 
 
 character = ns.model('Character', {
-    'idx': fields.Integer(required=True, description='캐릭터 고유 인덱스'),
-    'user_id': fields.String(required=True, description='유저 고유 번호'),
-    'scenario_idx': fields.Integer(required=True, description='시나리오 고유 넘버'),
-    'scenario_title': fields.String(required=True, description='시나리오 제목'),
+    # 'idx': fields.Integer(required=True, description='캐릭터 고유 인덱스'),
+    # 'user_id': fields.String(required=True, description='유저 고유 번호'),
+    # 'scenario_idx': fields.Integer(required=True, description='시나리오 고유 넘버'),
+    # 'scenario_title': fields.String(required=True, description='시나리오 제목'),
 
     'name': fields.String(required=True, description='캐릭터 이름'),
     'content': fields.String(required=True, description='캐릭터 설명'),
-    'created_at': fields.DateTime(description='생성일'),
-    'updated_at': fields.DateTime(description='수정일'),
+    # 'created_at': fields.DateTime(description='생성일'),
+    # 'updated_at': fields.DateTime(description='수정일'),
     'is_opened': fields.Boolean(description='공개 여부'),
-    'is_deleted': fields.Boolean(description='삭제 여부'),
+    # 'is_deleted': fields.Boolean(description='삭제 여부'),
 
     'elements': fields.List(fields.Nested(ns.model('CharacterElement', {
         'name': fields.String(required=True, description='캐릭터 설정 항목'),
@@ -34,12 +34,12 @@ character = ns.model('Character', {
         'is_opened' : fields.Boolean(description='캐릭터 설정 내용')
         })), 
         description='캐릭터 설정'),
-    'items': fields.List(fields.Nested(ns.model('Item', {
-        'name': fields.String(required=True, description='아이템 항목'),
-        'content': fields.String(required=False, description='아이템 내용'),
-        'is_opened' : fields.Boolean(description='캐릭터 보유 아이템')
-        })), 
-        description='캐릭터의 보유 아이템 리스트'),
+    # 'items': fields.List(fields.Nested(ns.model('Item', {
+    #     'name': fields.String(required=True, description='아이템 항목'),
+    #     'content': fields.String(required=False, description='아이템 내용'),
+    #     'is_opened' : fields.Boolean(description='캐릭터 보유 아이템')
+    #     })), 
+    #     description='캐릭터의 보유 아이템 리스트'),
 })
 
 
