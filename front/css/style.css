@@ -1,0 +1,20 @@
+main {
+    background: #f2f4f7;
+    min-height: 700px;
+  }
+  .main-container {
+    width: 1080px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 330px 330px; /* 각 행(세로줄)의 길이 */
+    grid-template-rows: 120px 120px 120px 120px; /* 각 열(가로줄)의 길이 */
+    gap: 10px; /* 자식요소간의 간격 */
+  }
+  .temp-box {
+    background: yellow;
+    width: 100%;
+    height: 100%;
+    font-size: 40px;
+    border: 1px solid #dee3eb;
+    text-align: center;
+  }
